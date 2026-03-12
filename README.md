@@ -1,6 +1,8 @@
 # mini-rag
 
-This is Rag application for question answering that follows MVC architecture.
+### This is Rag application for question answering.
+- Upload your documents, and retrieve questions about them.
+- The architecture of this app follows MVC.
 
 # Technologies Used
 
