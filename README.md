@@ -1,4 +1,4 @@
-# Rag application
+# Rag Application
 
 ### This is Rag application for question answering.
 - Upload your documents, and retrieve questions about them.
