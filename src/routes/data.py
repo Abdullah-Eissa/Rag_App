@@ -184,10 +184,10 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
         no_records += await chunk_model.insert_many_chunks(chunks=file_chunks_records)
         no_files += 1
         
-        return JSONResponse(
-            content={
-                'signal': ResponseSignal.PROCESSING_SUCCESS.value,
-                'inserted_chunks': no_records,
-                "processed_files": no_files
-            }
-        )
+    return JSONResponse(
+        content={
+            'signal': ResponseSignal.PROCESSING_SUCCESS.value,
+            'inserted_chunks': no_records,
+            "processed_files": no_files
+        }
+    )
