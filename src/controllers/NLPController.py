@@ -123,6 +123,8 @@ class NLPController(BaseController):
             for idx, doc in enumerate(retrieved_documents)
         ])
         
+        documents = [f'Document: {idx+1}\n{doc.text}\n\n' for idx, doc in enumerate(retrieved_documents)]
+        
         footer_prompt = self.template_parser.get(
             group='rag', key='footer_prompt',
             vars={'query': query}
@@ -144,4 +146,4 @@ class NLPController(BaseController):
             # temperature=
         )
         
-        return answer, full_prompt, chat_history
+        return answer, full_prompt, chat_history, documents

@@ -30,7 +30,7 @@ class ChunkModel(BaseDataModel):
 
     async def create_chunk(self, chunk: DataChunk):
         result = await self.collection.insert_one(chunk.dict(by_alias=True, exclude_unset=True))
-        chunk._id = result.inserted_id
+        chunk.id = result.inserted_id # should be id
         return chunk
 
     async def get_chunk(self, chunk_id: str):
@@ -64,6 +64,13 @@ class ChunkModel(BaseDataModel):
 
         return result.deleted_count
     
+    async def delete_chunks_by_asset_id(self, asset_id: ObjectId):
+        result = await self.collection.delete_many({
+            "chunk_asset_id": asset_id
+        })
+
+        return result.deleted_count
+    
     async def get_poject_chunks(self, project_id: ObjectId, page_no: int=1, page_size: int=50):
         records = await self.collection.find({
                     "chunk_project_id": project_id
@@ -76,3 +83,4 @@ class ChunkModel(BaseDataModel):
             for record in records
         ]
 
+    

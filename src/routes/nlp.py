@@ -2,10 +2,12 @@ from fastapi import FastAPI, APIRouter, status, Request
 from fastapi.responses import JSONResponse
 from routes.schemes.nlp import PushRequest, SearchRequest
 from models.ProjectModel import ProjectModel
+from models.ChatHistoryModel import ChatHistoryModel
 from models.ChunkModel import ChunkModel
 from controllers import NLPController
 from models import ResponseSignal
-
+from models.db_schemes import ChatHistory
+import json
 import logging
 
 logger = logging.getLogger('uvicorn.error')
@@ -113,7 +115,7 @@ async def get_project_index_info(request: Request, project_id: str):
         }
     )
 
-@nlp_router.post("/index/search/{project_id}")          # search_request: from postman
+@nlp_router.post("/index/search/{project_id}")
 async def search_index(request: Request, project_id: str, search_request: SearchRequest):
     
     project_model = await ProjectModel.create_instance(
@@ -155,6 +157,10 @@ async def search_index(request: Request, project_id: str, search_request: Search
 @nlp_router.post("/index/answer/{project_id}")
 async def answer_rag(request: Request, project_id: str, search_request: SearchRequest):
     
+    chat_history_model = await ChatHistoryModel.create_instance(
+        db_client=request.app.db_client
+    )
+    
     project_model = await ProjectModel.create_instance(
         db_client=request.app.db_client
     )
@@ -170,7 +176,7 @@ async def answer_rag(request: Request, project_id: str, search_request: SearchRe
         template_parser=request.app.template_parser,
     )
 
-    answer, full_prompt, chat_history = nlp_controller.answer_rag_question(
+    answer, full_prompt, chat_history, documents = nlp_controller.answer_rag_question(
         project=project,
         query=search_request.text,
         limit=search_request.limit,
@@ -184,12 +190,40 @@ async def answer_rag(request: Request, project_id: str, search_request: SearchRe
                     "signal": ResponseSignal.RAG_ANSWER_ERROR.value
                 }
         )
+        
+    chat_history_record = ChatHistory(
+        chat_project_id=project.id,
+        query=search_request.text,
+        answer=answer
+    )
+    
+    _ = await chat_history_model.insert_chat_history(
+        chat_history=chat_history_record
+    )
+    
+    if search_request.clear_chat_history:
+        _ = await chat_history_model.clear_chat_history(
+            project_id=project.id
+        )
+        
+    full_chat_history = await chat_history_model.get_chat_history(
+        project_id=project.id
+    )
+    
+
+    full_chat_history_li = [
+        {'User question': el.query,
+        'Model response': el.answer}
+        for el in full_chat_history
+    ]
     
     return JSONResponse(
         content={
             "signal": ResponseSignal.RAG_ANSWER_SUCCESS.value,
             "answer": answer,
             "full_prompt": full_prompt,
-            "chat_history": chat_history
+            "Retrieved Documents": documents,
+            "chat_history": chat_history,
+            "full_chat_history": full_chat_history_li
         }
     )

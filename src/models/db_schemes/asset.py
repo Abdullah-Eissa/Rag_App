@@ -11,6 +11,7 @@ class Asset(BaseModel):
     asset_size: int = Field(ge=0, default=None)
     asset_config: dict = Field(default=None)
     asset_pushed_at: datetime = Field(default=datetime.utcnow)
+    file_path: str = Field(..., min_length=1)
 
     class Config:
         arbitrary_types_allowed = True

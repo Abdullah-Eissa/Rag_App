@@ -57,6 +57,11 @@ class AssetModel(BaseDataModel):
             return Asset(**record)
         
         return None
-
-
     
+    
+    async def delete_asset_by_id(self, asset_id: ObjectId):
+        result = await self.collection.delete_one({
+            '_id': asset_id
+        })
+        
+        return result.deleted_count
