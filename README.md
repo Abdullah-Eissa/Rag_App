@@ -6,7 +6,7 @@
 
 # API Endpoints
 
-![App endpoints in postman](app_screenshots/requests.PNG)
+![App endpoints in postman](src/assets/screenshots/requests.PNG)
 
 ### upload
 - **Description:** Uploads a file to your local machine and store information about it in assets MongoDB collection.
