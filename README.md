@@ -4,13 +4,42 @@
 - Upload your documents, and retrieve questions about them.
 - The architecture of this app follows MVC.
 
+# API Endpoints
+
+![App endpoints in postman](screenshots/requests.PNG)
+
+### upload
+- **Description:** Uploads a file to your local machine and store information about it in assets MongoDB collection.
+
+### process
+- **Description:** Process the uploaded file and convert it into text chunks then store these chunks in chunks MongoDB collection.
+
+### nlp_index_push
+- **Description:** Convert text chunks into text embeddings vectors using Cohere embedding client, then push these embeddings into QDRANT vector database for fast and scalable vector similarity search.
+
+### nlp_index_info
+- **Description:** Get info about data in QDRANT vector database.
+
+### nlp_index_search
+- **Description:** Input user's query, then searches for similar embeddings in the QDRANT vector database.
+
+### nlp_rag_answer
+- **Description:** Input user's query, searches for similar embeddings in the QDRANT vector database, then gives answers using Cohere generation client.
+
+### return_uploaded_files
+- **Description:** Get info about uploaded files such as file name and file path in your local machine
+
+### delete_documents
+- **Description:** Delete multiple uploaded files from your local machine, from assets collection and from chunks collection if these files have chunks.
+
+
 # Technologies Used
 
 ## 1. LLM Providers
-- CoHere generation client used for text generation.
-- CoHere embedding client used for text embedding to vector database.
+- Cohere generation client used for text generation.
+- Cohere embedding client used for text embedding to vector database.
 
-## 2. MongoDB
+## 2. MongoDB (Motor)
 Used for:
 - Storing documents and their metadata
 - Storing documents chunks

@@ -75,8 +75,6 @@ async def upload_data(request: Request, project_id: str, files: List[UploadFile]
     )
     
     
-    
-    
 @data_router.get('/get_uploaded_files/{project_id}')
 async def get_uploaded_data(request: Request, project_id: str):
     
