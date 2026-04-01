@@ -1,7 +1,7 @@
 # Rag Application
 
 ### This is Rag application for question answering.
-- Upload your documents, and retrieve questions about them.
+- Upload your documents, and retrieve questions about them and look at the chat history.
 - The architecture of this app follows MVC.
 
 # API Endpoints
@@ -24,7 +24,7 @@
 - **Description:** Input user's query, then searches for similar embeddings in the QDRANT vector database.
 
 ### nlp_rag_answer
-- **Description:** Input user's query, searches for similar embeddings in the QDRANT vector database, then gives answers using Cohere generation client.
+- **Description:** Input user's query, searches for similar embeddings in the QDRANT vector database, then gives answers using Cohere generation client and shows chat history for each separate project.
 
 ### return_uploaded_files
 - **Description:** Get info about uploaded files such as file name and file path in your local machine
