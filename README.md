@@ -1,7 +1,10 @@
 # Rag Application
 
 ### This is Rag application for question answering.
-- Upload your documents, and retrieve questions about them and look at the chat history.
+- Upload your documents, and retrieve questions with context-aware RAG system that maintains multi-turn conversation history.
+
+- This application supports Semantic cache to reduce LLM API requests expenses and response latency.
+
 - The architecture of this app follows MVC.
 
 # API Endpoints

@@ -29,7 +29,7 @@ async def startup_span():
     app.vectordb_client = vectordb_provider_factory.create(
         provider=settings.VECTOR_DB_BACKEND
     )
-    app.vectordb_client.connect()
+    app.vectordb_client.connect()    
 
     app.template_parser = TemplateParser(
         language=settings.PRIMARY_LANG,

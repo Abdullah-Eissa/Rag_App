@@ -4,6 +4,7 @@ from ..VectorDBEnums import DistanceMethodEnums
 import logging
 from typing import List
 from models.db_schemes import RetrievedDocument
+import uuid
 
 class QdrantDBProvider(VectorDBInterface):
 
@@ -67,11 +68,14 @@ class QdrantDBProvider(VectorDBInterface):
             return False
         
         try:
+            if record_id is None:
+                record_id = str(uuid.uuid4())
+                
             _ = self.client.upload_records(
                 collection_name=collection_name,
                 records=[
                     models.Record(
-                        id=[record_id],
+                        id=record_id,
                         vector=vector,
                         payload={
                             "text": text, "metadata": metadata
@@ -143,6 +147,7 @@ class QdrantDBProvider(VectorDBInterface):
             RetrievedDocument(**{
                 "score": result.score,
                 "text": result.payload["text"],
+                "metadata": result.payload["metadata"]
             })
             for result in results
         ]

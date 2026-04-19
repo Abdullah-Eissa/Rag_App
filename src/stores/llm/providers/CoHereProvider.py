@@ -1,7 +1,9 @@
 from ..LLMInterface import LLMInterface
 from ..LLMEnums import CoHereEnums, DocumentTypeEnum
+from models.db_schemes import ChatHistory
 import cohere
 import logging
+from typing import List
 
 class CoHereProvider(LLMInterface):
 
@@ -49,7 +51,7 @@ class CoHereProvider(LLMInterface):
         
         max_output_tokens = max_output_tokens if max_output_tokens else self.default_generation_max_output_tokens
         temperature = temperature if temperature else self.default_generation_temperature
-
+        
         response = self.client.chat(
             model = self.generation_model_id,
             chat_history = chat_history,

@@ -176,13 +176,19 @@ async def answer_rag(request: Request, project_id: str, search_request: SearchRe
         template_parser=request.app.template_parser,
     )
 
+    full_chat_history = await chat_history_model.get_chat_history(
+        project_id=project.id
+    )
+
     answer, full_prompt, chat_history, documents = nlp_controller.answer_rag_question(
         project=project,
         query=search_request.text,
         limit=search_request.limit,
-        threshold=search_request.threshold
+        threshold=search_request.threshold,
+        cache_do_reset=search_request.cache_do_reset,
+        previous_chat_history=full_chat_history
     )
-
+    
     if not answer:
         return JSONResponse(
                 status_code=status.HTTP_400_BAD_REQUEST,

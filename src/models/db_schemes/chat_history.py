@@ -6,8 +6,6 @@ from typing import List
 class ChatHistory(BaseModel):
     id: Optional[ObjectId] = Field(None, alias="_id")
     chat_project_id: ObjectId
-    # chat_history: List
-    # full_prompt: str = Field(..., min_length=1)
     query: str = Field(..., min_length=1)
     answer: str = Field(..., min_length=1)
 

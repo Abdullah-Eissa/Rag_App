@@ -2,6 +2,7 @@ from .BaseDataModel import BaseDataModel
 from .db_schemes import ChatHistory
 from .enums.DataBaseEnum import DataBaseEnum
 from bson.objectid import ObjectId
+from typing import List
 
 class ChatHistoryModel(BaseDataModel):
     
@@ -46,6 +47,36 @@ class ChatHistoryModel(BaseDataModel):
             for record in records
         ]
         
+    @staticmethod
+    def get_conversation_history(previous_chat_history: List[ChatHistory], generation_client=None):
+        
+        if generation_client is None:
+            return None
+        
+        user_messages = [
+            message.query
+            for message in previous_chat_history
+        ]
+         
+        assistant_messages = [
+            message.answer
+            for message in previous_chat_history
+        ]
+            
+        conversation_history = []
+        for user_message, assistant_message in zip(user_messages, assistant_messages):
+            
+            user_constructed_msg = generation_client.construct_prompt(
+                role=generation_client.enums.USER.value, prompt=user_message
+            )
+            assistant_constructed_msg = generation_client.construct_prompt(
+                role=generation_client.enums.ASSISTANT.value, prompt=assistant_message
+            )
+            
+            conversation_history.append(user_constructed_msg)
+            conversation_history.append(assistant_constructed_msg)       
+                
+        return conversation_history
     
     async def clear_chat_history(self, project_id: ObjectId):
         result = await self.collection.delete_many({
